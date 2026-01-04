@@ -12,15 +12,15 @@ export default function App() {
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
-    // Inicialización de Telegram WebApp
-    const tg = (window as any).Telegram?.WebApp;
+    // Configuración de la interfaz de Telegram
+    const tg = window.Telegram?.WebApp;
     if (tg) {
       tg.ready();
       tg.expand();
+      tg.enableClosingConfirmation();
       tg.headerColor = '#000000';
       tg.backgroundColor = '#000000';
       
-      // Botón principal nativo de Telegram para cerrar la app de forma limpia
       if (tg.MainButton) {
         tg.MainButton.setText("CERRAR");
         tg.MainButton.show();
@@ -43,28 +43,32 @@ export default function App() {
     return "TIEMPO DE DESCANSO";
   };
 
-  const statusLabel = getStatus();
-
   return (
-    <div className="min-h-screen bg-black flex flex-col items-center justify-center p-6 text-white font-sans select-none overflow-hidden">
+    <div className="fixed inset-0 bg-black flex flex-col items-center justify-between py-16 px-6 text-white font-sans select-none overflow-hidden touch-none">
       
-      {/* 1. ESFERA DEL RELOJ (FUNCIONAL) */}
-      <div className="mb-12">
-        <CosmicClock size={320} />
+      {/* ESPACIADOR SUPERIOR */}
+      <div className="h-4" />
+
+      {/* 1. ESFERA DEL RELOJ (CENTRAL) */}
+      <div className="relative flex items-center justify-center w-full max-w-[85vw]">
+        <CosmicClock size={Math.min(window.innerWidth * 0.85, 360)} />
       </div>
 
-      {/* 2. ETIQUETA DE TIEMPO CORRESPONDIENTE */}
-      <div className="text-center">
-        <div className="text-2xl font-black uppercase tracking-[0.3em] italic text-white/90">
-          {statusLabel}
+      {/* 2. ETIQUETA DE TIEMPO Y BRANDING */}
+      <div className="flex flex-col items-center gap-12">
+        <div className="text-center">
+          <p className="text-[10px] tracking-[0.4em] text-white/40 mb-2 uppercase">Ciclo Actual</p>
+          <h2 className="text-2xl font-black uppercase tracking-[0.25em] italic text-white/95 leading-tight">
+            {getStatus()}
+          </h2>
         </div>
-      </div>
 
-      {/* 3. BRANDING EXCLUSIVO */}
-      <div className="absolute bottom-12">
-        <p className="text-[11px] font-black tracking-[1.2em] uppercase italic opacity-30 ml-[1.2em]">
-          Litos Ink Seeds
-        </p>
+        <div className="flex flex-col items-center opacity-30">
+          <div className="w-8 h-[1px] bg-white mb-4" />
+          <p className="text-[10px] font-black tracking-[1.2em] uppercase italic ml-[1.2em]">
+            Litos Ink Seeds
+          </p>
+        </div>
       </div>
       
     </div>
